@@ -1,0 +1,765 @@
+openapi: 3.0.1
+info:
+  title: API Reclutamiento
+  description: <p>Esta API simula una plataforma de reclutamiento. Modulo de candidatos
+  termsOfService: https://developer.circulodecredito.com.mx/terms-use
+  contact:
+    email: bryantcancino@gmail.com
+  license:
+    name: Derechos reservados AMARELLO 2021
+    url: https://amarello.cloud/es/
+  version: 1.0.0
+servers:
+- url: https://circulodecredito-dev.apigee.net/v1/reclutamiento
+paths:
+  /candidato:
+    post:
+      tags:
+      - Gestión del candidato
+      summary: Se agrega un candidato a las ofertas
+      description: Se persiste en la cache al candidato.
+      operationId: postCandidate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CandidatoPeticion'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidatoRespuesta'
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "400.1"
+                  mensaje: El campo "{Campo}" no puede estar vacío.
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "401.1"
+                  mensaje: Token incorrecto.
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "404.1"
+                  mensaje: No se encontró a la persona.
+        429:
+          description: TOO MANY REQUESTS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar
+                    antes de realizar una nueva solicitud.
+        500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrio un problema, inténtelo nuevamente más tarde.
+        503:
+          description: SERVICE UNAVAILABLE
+          content: {}
+      security:
+      - Bearer: []
+      x-codegen-request-body-name: request
+  /candidatos:
+    get:
+      tags:
+      - Gestión del candidato
+      summary: Lista todos los candidatos persistidos en la cache
+      description: Muestra la informacion de todos los candidatos guardada en la cache.
+      operationId: getCandidates
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidatos'
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "400.1"
+                  mensaje: El campo "{Campo}" no puede estar vacío.
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "401.1"
+                  mensaje: Token incorrecto.
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "404.1"
+                  mensaje: No se encontró a la persona.
+        429:
+          description: TOO MANY REQUESTS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar
+                    antes de realizar una nueva solicitud.
+        500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrio un problema, inténtelo nuevamente más tarde.
+        503:
+          description: SERVICE UNAVAILABLE
+          content: {}
+      security:
+      - Bearer: []
+  /candidato/{idCandidato}:
+    get:
+      tags:
+      - Gestión del candidato
+      summary: Provide candidate information.
+      description: Muestra la informacion del candidato guardada en la cache.
+      operationId: getCandidate
+      parameters:
+      - name: idCandidato
+        in: path
+        description: Unique identifier of the candidate.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidatoRespuesta'
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "400.1"
+                  mensaje: El campo "{Campo}" no puede estar vacío.
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "401.1"
+                  mensaje: Token incorrecto.
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "404.1"
+                  mensaje: No se encontró al candidato.
+                - codigo: "404.1"
+                  mensaje: No se encontró al candidato. La cache esta vacia.
+        429:
+          description: TOO MANY REQUESTS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar
+                    antes de realizar una nueva solicitud.
+        500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrio un problema, inténtelo nuevamente más tarde.
+        503:
+          description: SERVICE UNAVAILABLE
+          content: {}
+      security:
+      - Bearer: []
+    put:
+      tags:
+      - Gestión del candidato
+      summary: Se actualiza el candidato  seleccionado
+      description: Busca y modifica el candidato persistido en la cache.
+      operationId: getCreditos
+      parameters:
+      - name: idCandidato
+        in: path
+        description: Unique identifier of the candidate.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CandidatoPeticion'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidatoRespuesta'
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "400.1"
+                  mensaje: El campo "{Campo}" no puede estar vacío.
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "401.1"
+                  mensaje: Token incorrecto.
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "404.1"
+                  mensaje: No se encontró a la persona.
+        429:
+          description: TOO MANY REQUESTS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar
+                    antes de realizar una nueva solicitud.
+        500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrio un problema, inténtelo nuevamente más tarde.
+        503:
+          description: SERVICE UNAVAILABLE
+          content: {}
+      security:
+      - Bearer: []
+      x-codegen-request-body-name: request
+  /candidato/{idCandidato}/validacion:
+    get:
+      tags:
+      - Gestión del candidato
+      summary: Aporta información externa del candidato.
+      description: 'Aporta información del candidato, complementando con fuentes externas:
+        cedula profesional, validacion de CP y lista negra del SAR.'
+      operationId: getCandidateDepthSearch
+      parameters:
+      - name: idCandidato
+        in: path
+        description: Unique identifier of the candidate.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidatoRespuesta'
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "400.1"
+                  mensaje: El campo "{Campo}" no puede estar vacío.
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "401.1"
+                  mensaje: Token incorrecto.
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "404.1"
+                  mensaje: No se encontró al candidato.
+                - codigo: "404.1"
+                  mensaje: No se encontró al candidato. La cache esta vacia.
+        429:
+          description: TOO MANY REQUESTS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar
+                    antes de realizar una nueva solicitud.
+        500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrio un problema, inténtelo nuevamente más tarde.
+        503:
+          description: SERVICE UNAVAILABLE
+          content: {}
+      security:
+      - Bearer: []
+  /acceso:
+    post:
+      tags:
+      - Oauth2
+      summary: Solicitud de token de acceso
+      description: Se obtiene un token
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - grant_type
+              properties:
+                grant_type:
+                  type: string
+                  description: ""
+                  enum:
+                  - client_credentials
+        required: true
+      responses:
+        200:
+          description: Authorisation token (Bearer)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        401:
+          description: Unauthorized
+          content: {}
+      security:
+      - OAuth2: []
+  /ofertas:
+    get:
+      tags:
+      - Gestión de ofertas de trabajo
+      summary: Lista de ofertas de trabajo.
+      description: Ofertas dadas por la empresa.
+      operationId: getOffers
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ofertas'
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "401.1"
+                  mensaje: Token incorrecto.
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "404.1"
+                  mensaje: No se encontraron ofertas.
+        429:
+          description: TOO MANY REQUESTS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar
+                    antes de realizar una nueva solicitud.
+        500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrio un problema, inténtelo nuevamente más tarde.
+        503:
+          description: SERVICE UNAVAILABLE
+          content: {}
+      security:
+      - Bearer: []
+components:
+  schemas:
+    formData_grant_type:
+      type: string
+      description: ""
+      enum:
+      - client_credentials
+    Token:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: valor del token
+          example: HrZ9wt6NQyd2vovRwARZ1Xo6wXXE
+        token_type:
+          type: string
+          description: Tipo bearer
+          example: BearerToken
+          enum:
+          - Bearer
+        expires_in:
+          type: string
+          description: tiempo de vida del otoken en segundos
+          example: "3599"
+    EducacionValidada:
+      type: object
+      properties:
+        anioreg:
+          type: integer
+          description: Reportar el nombre de lentidad a la cual pertenece la dirección
+            contenida.
+          example: 2021
+        desins:
+          type: string
+          description: Institucion marcada por la celula.
+          example: POLITECNICO NACIONAL
+        idCedula:
+          type: string
+          description: Cedula marcada por el registro.
+          example: "12270195"
+        nombre:
+          type: string
+          description: Institucion marcada por la celula.
+          example: ALFONSO BRYANT
+        paterno:
+          type: string
+          description: Apellido paterno marcada por la celula.
+          example: CANCINO
+        materno:
+          type: string
+          description: Apellido materno marcada por la celula.
+          example: FUENTES
+        sexo:
+          type: string
+          description: Sexo marcada por la celula. 1 es masculino y 2 es femenino
+          example: "1"
+        tipo:
+          type: string
+          description: Tipo de celula.
+          example: C1
+        titulo:
+          type: string
+          description: Titulo obtenido.
+          example: LICENCIATURA EN INGENIERIA EN SISTEMAS COMPUTACIONALES
+      description: Datos del domicilio validados a partir del CP del candidato.
+    UbicacionValidada:
+      type: object
+      properties:
+        entidad:
+          type: string
+          description: Reportar el nombre de lentidad a la cual pertenece la dirección
+            contenida.
+          example: CIUDAD DE MEXICO
+        ciudad:
+          type: string
+          description: Reportar la ciudad a la cual pertenece la dirección contenida.
+          example: CIUDAD DE MEXICO
+        municipio:
+          type: string
+          description: Reportar la delegación o municipio a la cual pertenece la dirección.
+          example: MIGUEL HIDALGO
+        colonia:
+          type: string
+          description: Reportar la colonia a la cual pertenece la dirección.
+          example: ARGENTINA PONIENTE
+        CP:
+          maxLength: 5
+          type: string
+          description: El código postal reportado debeestar compuesto por 5 dígitos.
+          example: "11230"
+      description: Datos del domicilio validados a partir del CP del candidato.
+    Candidatos:
+      type: object
+      properties:
+        candidatos:
+          type: array
+          items:
+            $ref: '#/components/schemas/CandidatoRespuesta'
+      description: Si existen empleos, se listarán.
+    Error:
+      type: object
+      properties:
+        codigo:
+          type: string
+          description: Código de error.
+          example: "400.1"
+        mensaje:
+          type: string
+          description: Mensaje de error.
+          example: El campo "{Campo}" es requerido.
+      description: error
+    Errores:
+      type: object
+      properties:
+        errores:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      description: Si existen errores, se listarán.
+    CandidatoPeticion:
+      required:
+      - CP
+      - RFC
+      - apellidoMaterno
+      - apellidoPaterno
+      - nombres
+      type: object
+      properties:
+        apellidoPaterno:
+          maxLength: 50
+          type: string
+          description: Apellido paterno del candidato. Sin abreviaturas o iniciales
+          example: Cancino
+        apellidoMaterno:
+          maxLength: 50
+          type: string
+          description: Apellido materno del candidato
+          example: Fuentes
+        nombres:
+          maxLength: 100
+          type: string
+          description: Primer nombre del candidato
+          example: Alfonso Bryant
+        fechaNacimiento:
+          type: string
+          description: Fecha de nacimiento del candidato, en el formato especificado
+            (por defecto yyyy-MM-dd)
+          format: yyyy-MM-dd
+          example: 2001-01-01
+        RFC:
+          maxLength: 13
+          type: string
+          description: RFC con homoclave del candidato
+          example: CAFA930121293
+        CP:
+          maxLength: 5
+          minLength: 5
+          type: string
+          description: El código postal reportado debeestar compuesto por 5 dígitos.
+          example: "11370"
+        postulaciones:
+          type: array
+          example:
+          - 1
+          - 2
+          items:
+            type: integer
+      description: Datos generales del candidato.
+    CandidatoRespuesta:
+      type: object
+      properties:
+        idCandidato:
+          type: string
+          description: id unico de oferta
+          example: 79e91d89-b032-47ed-9c16-47d85691493b
+        apellidoPaterno:
+          maxLength: 50
+          type: string
+          description: Apellido paterno del candidato. Sin abreviaturas o iniciales
+          example: Cancino
+        apellidoMaterno:
+          maxLength: 50
+          type: string
+          description: Apellido materno del candidato
+          example: Fuentes
+        nombres:
+          maxLength: 100
+          type: string
+          description: Primer nombre del candidato
+          example: Alfonso Bryant
+        fechaNacimiento:
+          type: string
+          description: Fecha de nacimiento del candidato, en el formato especificado
+            (por defecto yyyy-MM-dd)
+          format: yyyy-MM-dd
+          example: 2001-01-01
+        RFC:
+          maxLength: 13
+          type: string
+          description: RFC con homoclave del candidato
+          example: CAFA930121293
+        CP:
+          maxLength: 5
+          minLength: 5
+          type: string
+          description: El código postal reportado debeestar compuesto por 5 dígitos.
+          example: "11370"
+        posibleListaNegra:
+          type: boolean
+          description: Persona encontrada en lista negra del SAT
+          example: true
+        postulaciones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Oferta'
+        ubicacionValidada:
+          $ref: '#/components/schemas/UbicacionValidada'
+        educacionValidada:
+          type: array
+          items:
+            $ref: '#/components/schemas/EducacionValidada'
+      description: Datos generales del candidato.
+    Oferta:
+      type: object
+      properties:
+        idOferta:
+          type: integer
+          description: id unico de oferta
+          format: int32
+          example: 2
+        titulo:
+          maxLength: 100
+          type: string
+          description: Titulo de la oferta
+          example: Desarrollador Apigee
+        descripcion:
+          maxLength: 100
+          type: string
+          description: Caracteristicas de la ofeta
+          example: Echarle ganitas
+        active:
+          type: boolean
+          description: Oferta activamente solicitando vacantes
+          example: true
+      description: El elemento de Mensaje contiene información acerca de los mensajes
+        emitidos por Círculo de Crédito, este elemento se repite dependiendo del número
+        de mensajes.
+    Ofertas:
+      type: object
+      properties:
+        ofertas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Oferta'
+      description: Se muestran las ofertas de trabajo.
+  parameters:
+    idCandidato:
+      name: idCandidato
+      in: path
+      description: Unique identifier of the candidate.
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    OAuth2:
+      type: http
+      scheme: basic
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header
